@@ -1,11 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 public class Target : MonoBehaviour
 {
     private Rigidbody targetRb;
+    private GameManager gameManager;
     private float minSpeed = 12;
     private float maxSpeed = 16;
     private float maxTorque = 10;
@@ -16,19 +16,32 @@ public class Target : MonoBehaviour
     void Start()
     {
         targetRb = GetComponent<Rigidbody>();
+        gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
 
         targetRb.AddForce(RandomForce(), ForceMode.Impulse);
         targetRb.AddTorque(RandomTorque(), RandomTorque(), RandomTorque(), ForceMode.Impulse);
 
         transform.position = RandomSpawnPos();
+    }
 
-        // Update is called once per frame
-        void Update()
-        {
+    // Update is called once per frame
+    private void Update()
+    {
+       
+    }
 
-        }
+    private void OnMouseDown()
+    {
+        Destroy(gameObject);
+        gameManager.UpdateScore(5);
+    }
 
-        Vector3 RandomForce()
+    private void OnTriggerEnter(Collider other)
+    {
+        Destroy(gameObject);
+    }
+
+    Vector3 RandomForce()
         {
             return Vector3.up * Random.Range(minSpeed, maxSpeed);
         }
@@ -42,5 +55,5 @@ public class Target : MonoBehaviour
         {
             return new Vector3(Random.Range(-xRange, xRange), ySpawnPos);
         }
-    }
+    
 }
